@@ -1,0 +1,205 @@
+﻿@model string
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        h2 {
+            font-size: 90%
+        }
+
+        button {
+            min-width: 20px;
+            min-height: 20px;
+        }
+
+        #product-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-around;
+            padding: 20px;
+        }
+
+        .product {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            margin: 10px;
+            padding: 10px;
+            text-align: center;
+            background-color: #fff;
+        }
+
+        #cart {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 20px;
+            margin: 20px;
+        }
+
+            #cart h2 {
+                text-align: center;
+            }
+
+        #cart-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        #total {
+            text-align: right;
+            margin-top: 10px;
+        }
+
+        .remove-btn {
+            cursor: pointer;
+            color: red;
+        }
+
+        #checkout-btn {
+            background-color: #4caf50;
+            color: white;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Meal Plan</h1>
+    </header>
+
+    <div id="product-list">
+        <div class="product" id="product1">
+            <h2>Korean Sweet n Sour Chicken</h2>
+            <p>Price: $15</p>
+            <button onclick="addToCart('Korean Sweet n Sour Chicken', 14.99)">Add to Cart</button>
+        </div>
+
+        <div class="product" id="product2">
+            <h2>Poached Prawns with Fettuccine</h2>
+            <p>Price: $20</p>
+            <button onclick="addToCart('Poached Prawns with Fettuccine', 19.99)">Add to Cart</button>
+        </div>
+
+        <div class="product" id="product3">
+            <h2>Peanut Butter and Apple Oatmeal Breakfast Bars</h2>
+            <p>Price: $10</p>
+            <button onclick="addToCart('Oatmeal Breakfast Bars', 9.99)">Add to Cart</button>
+        </div>
+
+        <div class="product" id="product4">
+            <h2>Creamy Tomato Soup</h2>
+            <p>Price: $20</p>
+            <button onclick="addToCart('Creamy Tomato Soup', 12.99)">Add to Cart</button>
+        </div>
+
+        <!-- Add more products as needed -->
+    </div>
+
+    <div id="cart">
+        <ul id="cart-list"></ul>
+        <div id="total">Total: $<span id="cart-total">0</span></div>
+        <button id="checkout-btn" onclick="checkout();">Checkout</button>
+    </div>
+
+    <script>
+        let cart = [];
+
+        function addToCart(productName, price) {
+            // Check if the product is already in the cart
+            const existingItem = cart.find(item => item.name === productName);
+
+            if (existingItem) {
+                // If the product is already in the cart, increment the quantity
+                existingItem.quantity += 1;
+            } else {
+                // If the product is not in the cart, add it with quantity 1
+                cart.push({ name: productName, price: price, quantity: 1 });
+            }
+
+            updateCart();
+        }
+
+        function updateCart() {
+            const cartList = document.getElementById('cart-list');
+            const cartTotal = document.getElementById('cart-total');
+
+            // Clear the current list
+            cartList.innerHTML = '';
+
+            // Populate the cart list
+            cart.forEach((item, index) => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('cart-item');
+                listItem.innerHTML = `
+                    <span>${item.name}</span>
+                    <button onclick="incrementQuantity(${index})">+</button>
+                    <span>Quantity: ${item.quantity}</span>
+                    <button onclick="decrementQuantity(${index})" ${item.quantity > 1 ? '' : 'disabled'}>-</button>
+                    <span>$${item.price}</span>
+                    <button class="remove-btn" onclick="removeItem(${index})">Remove</button>
+                `;
+                cartList.appendChild(listItem);
+            });
+
+            // Calculate and display the total
+            const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
+            cartTotal.textContent = total.toFixed(2);
+        }
+
+        function removeItem(index) {
+            cart.splice(index, 1);
+            updateCart();
+        }
+
+        function checkout() {
+            // Perform checkout logic here
+            // For now, display a simple alert
+            alert('Thank you for using SmartShop!');
+
+            // Clear the cart after checkout
+            cart = [];
+            updateCart();
+        }
+
+        function incrementQuantity(index) {
+            cart[index].quantity += 1;
+            updateCart();
+        }
+
+        function decrementQuantity(index) {
+            if (cart[index].quantity > 1) {
+                cart[index].quantity -= 1;
+                updateCart();
+            }
+        }
+    </script>
+
+</body>

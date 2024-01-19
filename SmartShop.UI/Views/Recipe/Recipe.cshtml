@@ -1,0 +1,80 @@
+﻿@model string
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        #recipe-container {
+            max-width: 600px;
+            margin: auto;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #ingredients-list {
+            list-style-type: none;
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="recipe-container">
+        <h1 id="recipe-title"></h1>
+        <img id="recipe-image" alt="Recipe Image">
+
+        <p id="recipe-summary"></p>
+
+        <h2>Ingredients:</h2>
+        <ul id="ingredients-list">
+            <!-- Ingredients will be added here using JavaScript -->
+        </ul>
+
+        <h2>Instructions:</h2>
+        <div id="instructions">
+            <!-- Instructions will be added here using JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        // Extract data from the provided JSON
+        const recipeResults = @Html.Raw(Model);
+
+        let recipe = recipeResults.recipes[0];
+
+        // Display recipe details
+        document.getElementById('recipe-title').textContent = recipe.title;
+        document.getElementById('recipe-image').src = recipe.image;
+        document.getElementById('recipe-summary').innerHTML = recipe.summary;
+
+        // Display ingredients
+        const ingredientsList = document.getElementById('ingredients-list');
+        recipe.extendedIngredients.forEach(ingredient => {
+            const li = document.createElement('li');
+            li.textContent = `${ingredient.original}`;
+            ingredientsList.appendChild(li);
+        });
+
+        // Display instructions
+        const instructionsDiv = document.getElementById('instructions');
+        const steps = recipe.analyzedInstructions[0].steps;
+        steps.forEach(step => {
+            const p = document.createElement('p');
+            p.innerHTML = `<strong>Step ${step.number}:</strong> ${step.step}`;
+            instructionsDiv.appendChild(p);
+        });
+    </script>
+
+</body>
+</html>

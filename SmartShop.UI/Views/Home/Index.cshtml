@@ -1,0 +1,86 @@
+﻿@model List<SmartShop.UI.Controllers.Recipe>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>@ViewData["Title"]</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .dot {
+            height: 25px;
+            width: 25px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
+        .card {
+            height: auto;
+            width: 300px;
+            margin: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .card_img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            background-color: #007bff;
+            color: white;
+            border-radius: 10px 10px 0 0;
+        }
+
+        .modal-footer {
+            border-radius: 0 0 10px 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="text-center">
+        <h1 class="display-4" style="font-family: Impact;">Welcome To SmartShop</h1>
+        <div>
+            <a href="@Url.Action("Suggestion", "Recipe")" type="button" class="btn btn-outline-primary btn-lg">Show Recipe Example</a>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- ... (unchanged) ... -->
+    </div>
+
+    <div style="display: flex; justify-content: center; margin-top: 30px;">
+
+           <div class="card">
+               <img class="card_img" src="https://media.istockphoto.com/id/1316145932/photo/table-top-view-of-spicy-food.jpg?s=612x612&w=0&k=20&c=eaKRSIAoRGHMibSfahMyQS6iFADyVy1pnPdy1O5rZ98=" alt="Card Image 1" />
+           </div>
+           <div class="card">
+               <img class="card_img" src="https://thumbs.dreamstime.com/b/assorted-indian-recipes-food-various-spices-rice-wooden-table-92742528.jpg" alt="Card Image 2" />
+           </div>
+           <div class="card">
+               <img class="card_img" src="https://t3.ftcdn.net/jpg/02/60/12/88/360_F_260128861_Q2ttKHoVw2VrmvItxyCVBnEyM1852MoJ.jpg" alt="Card Image 3" />
+           </div>
+           <div class="card">
+               <img class="card_img" src="https://media.istockphoto.com/id/1409236261/photo/healthy-food-healthy-eating-background-fruit-vegetable-berry-vegetarian-eating-superfood.jpg?b=1&s=612x612&w=0&k=20&c=2zneB18UvroqNeKhG13kCT-jgMuxvHHpEcWKhNDFxBk=" alt="Card Image 4" />
+           </div>
+    </div>
+</body>
+</html>

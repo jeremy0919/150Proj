@@ -1,0 +1,210 @@
+﻿@model string
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recipe Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        #recipe-container {
+            max-width: 800px;
+            margin: auto;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .col {
+            flex: 0 0 48%; /* Adjust the width as needed */
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        #ingredients-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .button {
+            width: 50px;
+            height: 25px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1 style="text-align: center;">Recipes</h1>
+    </header>
+    <br /><br />
+    <div id="recipe-div" class="recipe-container">
+    </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">View Recipe</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="modal-content">
+                        <div id="recipe-container">
+                            <h1 id="recipe-title"></h1>
+                            <img id="recipe-image" alt="Recipe Image">
+
+                            <p id="recipe-summary"></p>
+
+                            <h2>Ingredients:</h2>
+                            <ul id="ingredients-list">
+                                <!-- Ingredients will be added here using JavaScript -->
+                            </ul>
+
+                            <h2>Instructions:</h2>
+                            <div id="instructions">
+                                <!-- Instructions will be added here using JavaScript -->
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Add Recipe</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <script>
+        // SCript for the modal
+        
+        var exampleModal = document.getElementById('exampleModal')
+        exampleModal.addEventListener('show.bs.modal', function (event) {
+            // Button that triggered the modal
+            var button = event.relatedTarget
+            // Extract info from data-bs-* attributes
+            var url = button.getAttribute('data-bs-url');
+            $.get(url, function (recipeResults) {
+                // Extract data from the provided JSON
+                //const recipeResults = @Html.Raw(Model);
+                recipeData = JSON.parse(recipeResults);
+                let recipe = recipeData.recipes[0];
+
+                // Display recipe details
+                document.getElementById('recipe-title').textContent = recipe.title;
+                document.getElementById('recipe-image').src = recipe.image;
+                document.getElementById('recipe-summary').innerHTML = recipe.summary;
+
+                // Display ingredients
+                const ingredientsList = document.getElementById('ingredients-list');
+                recipe.extendedIngredients.forEach(ingredient => {
+                    const li = document.createElement('li');
+                    li.textContent = `${ingredient.original}`;
+                    ingredientsList.appendChild(li);
+                });
+
+                // Display instructions
+                const instructionsDiv = document.getElementById('instructions');
+                const steps = recipe.analyzedInstructions[0].steps;
+                steps.forEach(step => {
+                    const p = document.createElement('p');
+                    p.innerHTML = `<strong>Step ${step.number}:</strong> ${step.step}`;
+                    instructionsDiv.appendChild(p);
+                });
+            });
+
+        })
+
+
+
+        // Extract data from the provided JSON
+        const recipeResults = @Html.Raw(Model);
+
+        // Iterate through the recipes array
+        for (let i = 0; i < recipeResults.recipes.length; i++) {
+            let recipe = recipeResults.recipes[i];
+
+            // Create a new row container for every two recipes
+            if (i % 2 === 0) {
+                var recipeRow = document.createElement('div');
+                recipeRow.classList.add('row');
+            }
+
+            // Create a column for each recipe
+            var recipeCol = document.createElement('div');
+            recipeCol.classList.add('col');
+
+            // Display recipe details for each recipe
+            let recipeContainer = document.createElement('div');
+            recipeContainer.classList.add('recipe-container');
+
+            let imageElement = document.createElement('img');
+            imageElement.src = recipe.image;
+
+            let titleElement = document.createElement('h2');
+            titleElement.textContent = recipe.title;
+
+            // Create view button for each recipe
+            var viewRecipe = document.createElement('button');
+            viewRecipe.textContent = "VIEW";
+            viewRecipe.classList.add("btn");
+            viewRecipe.classList.add("btn-outline-primary");
+            viewRecipe.setAttribute('data-bs-url', '@Url.Action("ViewRecipe", "Recipe")' + '?id=' + recipe.id);
+            viewRecipe.setAttribute('data-bs-target', "#exampleModal");
+            viewRecipe.setAttribute('data-bs-toggle', "modal");
+
+            // Add an event listener to the button
+            //viewRecipe.addEventListener('click', function () {
+            //    // Handle the button click event here
+            //    console.log('Button clicked for recipe:', recipe.title);
+                
+            //    // Construct the URL dynamically with the encoded recipe as a query parameter
+            //    var url = '@Url.Action("ViewRecipe", "Recipe")' + '?id=' + recipe.id;
+
+            //    console.log(url);
+            //    // Open a new window/tab with the constructed URL
+            //    window.open(url, '_blank');
+            //});
+
+            // Create button for each recipe
+            var addRecipe = document.createElement('button');
+            addRecipe.textContent = "ADD";
+
+            // Add an event listener to the button
+            addRecipe.addEventListener('click', function () {
+                // Handle the button click event here
+                console.log('Button clicked for recipe:', recipe.title);
+                // You can add your logic to handle the button click event
+            });
+
+            // Append title and image elements to the container
+            recipeCol.appendChild(imageElement);
+            recipeCol.appendChild(titleElement);
+            recipeCol.appendChild(viewRecipe);
+            recipeCol.appendChild(addRecipe);
+
+            // Append the column to the current row
+            recipeRow.appendChild(recipeCol);
+
+            // Append the row to the recipe container
+            document.getElementById("recipe-div").appendChild(recipeRow);
+        }
+
+    </script>
+</body>
+</html>
